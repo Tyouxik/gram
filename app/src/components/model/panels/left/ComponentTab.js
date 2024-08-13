@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { patchComponent } from "../../../../actions/model/patchComponent";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
@@ -14,6 +14,7 @@ import { MultipleSystemsDropdown } from "../../../elements/MultipleSystemsDropdo
 import { COMPONENT_TYPE } from "../../board/constants";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { TechStacksDropdown } from "./TechStackDropdown";
+import { EditableDescription } from "../EditableDescription";
 
 export function ComponentTab() {
   const dispatch = useDispatch();
@@ -61,6 +62,10 @@ export function ComponentTab() {
     );
   }
 
+  function updateDescription(description) {
+    updateFields({ description });
+  }
+
   // // Update type
   // useEffect(() => {
   //   if (type !== component.type) {
@@ -93,7 +98,6 @@ export function ComponentTab() {
       e.target.blur();
     }
   }
-
   // console.log(systems, classes);
 
   return (
@@ -166,17 +170,11 @@ export function ComponentTab() {
                 }}
                 readOnly={readOnly}
               />
-
-              <TextField
-                fullWidth
-                multiline
-                variant="standard"
-                label="Description"
-                disabled={readOnly}
-                value={description}
-                onBlur={() => updateFields({ description })}
-                onChange={(e) => setDescription(e.target.value)}
-                onKeyDown={(e) => shouldBlur(e)}
+              <EditableDescription
+                readOnly={readOnly}
+                description={description}
+                showPreviewTitle
+                updateDescription={updateDescription}
               />
             </Box>
           </CardContent>
